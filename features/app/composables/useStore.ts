@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { CHANNEL_NAMES } from '../utils/constants';
+import { nanoid } from 'nanoid';
 
 export type Message = {
   author: string;
@@ -10,8 +11,11 @@ export type Message = {
 export type NewChannel = {
   id: string;
   name: string;
+  isDM: boolean;
   message?: { author: string; message: string };
 };
+
+export type NewDMChannel = Omit<NewChannel, 'id' | 'isDM'>;
 
 export type AppChannel = {
   id: string;
@@ -20,6 +24,7 @@ export type AppChannel = {
   isDM: boolean;
   hasUnreadMessages: boolean;
   messages: Message[];
+  hasMention?: boolean;
 };
 
 type AppState = {
@@ -74,7 +79,7 @@ export const useStore = defineStore('app', {
       this.channels.splice(index, 1);
     },
 
-    createDMChannel(channel: NewChannel) {
+    createChannel(channel: NewChannel) {
       this.channels.push({
         id: channel.id,
         name: channel.name,
@@ -82,6 +87,23 @@ export const useStore = defineStore('app', {
         isDM: true,
         hasUnreadMessages: false,
         messages: channel.message ? [channel.message] : []
+      });
+
+      return this.channels.at(-1) as AppChannel;
+    },
+
+    createDMChannel(channel: NewDMChannel) {
+      const channelId = `presence-${channel.name}-${this.username}-${nanoid(
+        4
+      )}`;
+
+      const existingChannel = this.channels.find(c => channel.name === c.name);
+      if (existingChannel) return existingChannel;
+
+      return this.createChannel({
+        ...channel,
+        id: channelId,
+        isDM: true
       });
     }
   }

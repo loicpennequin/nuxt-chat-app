@@ -8,6 +8,7 @@ const props = withDefaults(defineProps<{ is?: string }>(), {
   <component
     :is="props.is"
     bg="white dark:dark-100 opacity-40"
+    border="solid 2 white"
     color="inherit"
     p="6"
     rouned

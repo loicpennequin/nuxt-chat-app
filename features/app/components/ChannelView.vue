@@ -35,6 +35,7 @@ watchEffect(onInvalidate => {
 
 watchEffect(() => {
   store.currentChannel.hasUnreadMessages = false;
+  store.currentChannel.hasMention = false;
 });
 </script>
 

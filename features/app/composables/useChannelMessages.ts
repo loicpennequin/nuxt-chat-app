@@ -1,4 +1,4 @@
-import { AppChannel } from './useStore';
+import { MENTIONS_REGEXP } from '../utils/constants';
 
 export type Message = {
   author: string;
@@ -10,13 +10,25 @@ export const useChannelMessages = () => {
   const store = useStore();
 
   return {
-    getListeners(id: string) {
+    getListeners(channelId: string) {
+      const hasCurrentUserMention = (message: Message) => {
+        const mentions = [...message.message.matchAll(MENTIONS_REGEXP)];
+
+        return mentions.some(
+          ([mention]) => mention.substring(1) === store.username
+        );
+      };
+
       const onMessage = (message: Message) => {
-        const channel = store.getChannelById(id);
+        const channel = store.getChannelById(channelId);
 
         channel.messages.push(message);
+        if (channelId !== store.currentChannelId) {
+          store.getChannelById(channelId).hasMention =
+            hasCurrentUserMention(message);
+        }
 
-        channel.hasUnreadMessages = store.currentChannelId !== id;
+        channel.hasUnreadMessages = store.currentChannelId !== channelId;
       };
 
       const addSystemMessage = (message: string) => {

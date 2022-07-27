@@ -44,10 +44,7 @@ watch(
       tag="ul"
     >
       <li v-for="message in messages" :key="message.message" flex gap-3>
-        <span break-all :font="message.isSystem && 'italic'">
-          <span v-if="!message.isSystem" font-bold>{{ message.author }} :</span>
-          {{ message.message }}
-        </span>
+        <AppMessage :message="message" />
       </li>
       <li key="back-anchor">
         <a ref="anchor" href="#message-list-top" invisible>Back to top</a>

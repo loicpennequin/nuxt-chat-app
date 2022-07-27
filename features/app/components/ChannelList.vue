@@ -11,8 +11,8 @@ const createChannel = (data: { channel: NewChannel }) => {
 };
 
 const closeChannel = (index: number) => {
-  store.closeChannel(index);
   pusher?.unsubscribe(store.channels[index].id);
+  store.closeChannel(index);
 };
 
 const isCurrentChannel = (channel: AppChannel) =>
@@ -36,6 +36,7 @@ userChannel?.value.bind('new-conversation', createChannel);
         items-center
         p-x-3
         p-y-2
+        relative
         rounded-t-lg
       >
         <button @click="store.selectChannel(channel.id)">
@@ -47,6 +48,18 @@ userChannel?.value.bind('new-conversation', createChannel);
           i-ui-close
           :title="`close channel ${channel.name}`"
           @click="closeChannel(index)"
+        />
+
+        <div
+          v-if="channel.hasMention"
+          absolute
+          bg-purple-500
+          class="translate-x-1/4 -translate-y-1/4 rounded-1/2"
+          h-4
+          right-0
+          rounded-4xl
+          top-0
+          w-4
         />
       </li>
       <li border-b="solid 1 white" grow-1></li>
