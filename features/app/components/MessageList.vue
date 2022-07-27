@@ -16,10 +16,23 @@ const scrollToBottom = () => {
 };
 
 watch(() => messages.value.length, scrollToBottom);
+
+// avoids animating all the messages when switching channel
+const isTransitionDisabled = ref(false);
+watch(
+  () => store.currentChannelId,
+  () => {
+    console.log('?');
+    isTransitionDisabled.value = true;
+    setTimeout(() => {
+      isTransitionDisabled.value = false;
+    }, 50);
+  }
+);
 </script>
 
 <template>
-  <div h-full>
+  <div :class="isTransitionDisabled && 'no-transitions'" h-full>
     <div id="message-list-top" />
     <TransitionGroup
       id="message-list-top"
@@ -32,8 +45,8 @@ watch(() => messages.value.length, scrollToBottom);
     >
       <li v-for="message in messages" :key="message.message" flex gap-3>
         <span break-all :font="message.isSystem && 'italic'">
-          <span v-if="!message.isSystem" font-bold>{{ message.author }}</span>
-          : {{ message.message }}
+          <span v-if="!message.isSystem" font-bold>{{ message.author }} :</span>
+          {{ message.message }}
         </span>
       </li>
       <li key="back-anchor">
@@ -44,15 +57,16 @@ watch(() => messages.value.length, scrollToBottom);
 </template>
 
 <style scoped>
-.message-move,
-.message-enter-active,
-.message-leave-active {
+.message-enter-active {
   --at-apply: 'transition-all ease-in-out duration-300';
 }
 
-.message-enter-from,
-.message-leave-to {
+.message-enter-from {
   opacity: 0;
   --at-apply: 'opacity-0 -translate-x-10';
+}
+
+.no-transitions * {
+  transition: none !important;
 }
 </style>

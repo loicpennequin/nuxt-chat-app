@@ -11,9 +11,10 @@ nuxtApp.hook('page:finish', () => {
   }, 300);
 });
 </script>
+
 <template>
   <UiBackground :class="isTransitioning && 'overflow-hidden h-screen'">
-    <UiContainer h-full p-y-5>
+    <UiContainer col-start-1 h-full p-y-5 row-start-1>
       <slot />
     </UiContainer>
   </UiBackground>

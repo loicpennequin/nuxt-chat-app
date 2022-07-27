@@ -14,23 +14,21 @@ const closeChannel = (index: number) => {
   store.closeChannel(index);
   pusher?.unsubscribe(store.channels[index].id);
 };
+
+const isCurrentChannel = (channel: AppChannel) =>
+  channel === store.currentChannel;
+
 userChannel?.value.bind('new-conversation', createChannel);
-
-const getChannelColor = (channel: AppChannel) => {
-  if (channel.id === store.currentChannelId) return 'purple-500';
-  if (channel.hasUnreadMessages) return 'purple-300';
-
-  return 'transparent';
-};
 </script>
 
 <template>
   <nav>
-    <ul flex gap-2>
+    <ul flex>
       <li
         v-for="(channel, index) in store.channels"
         :key="channel.id"
-        :bg="getChannelColor(channel)"
+        border="solid white 1"
+        :border-b-color="isCurrentChannel(channel) && 'transparent'"
         :class="channel.hasUnreadMessages && 'animate-bounce'"
         :color="channel.id === store.currentChannelId ? 'white' : 'white'"
         flex
@@ -51,6 +49,7 @@ const getChannelColor = (channel: AppChannel) => {
           @click="closeChannel(index)"
         />
       </li>
+      <li border-b="solid 1 white" grow-1></li>
     </ul>
   </nav>
 </template>

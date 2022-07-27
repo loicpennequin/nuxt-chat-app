@@ -16,7 +16,7 @@ onUnmounted(() => {
 <template>
   <UiSurface class="chat-grid" grid h-full p="0">
     <AppHeader />
-    <AppChannelList border-b="solid 1 white" />
+    <AppChannelList />
     <AppChannelView />
     <AppMessageForm />
   </UiSurface>

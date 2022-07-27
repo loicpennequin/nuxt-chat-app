@@ -8,7 +8,7 @@ const sendMessage = async () => {
     body: {
       channel: store.currentChannelId,
       message: currentMessage.value,
-      target: store.currentChannel.name
+      target: store.currentChannel.isDM && store.currentChannel.name
     }
   });
 
