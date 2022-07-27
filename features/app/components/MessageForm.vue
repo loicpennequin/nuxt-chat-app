@@ -46,6 +46,25 @@ watch(suggestedMentions, suggestions => {
   selectedSuggestion.value = suggestions[0] ?? null;
 });
 
+const insertSuggestion = () => {
+  const prevSpace = currentMessage.value
+    .slice(0, cursorPosition.value)
+    .lastIndexOf(' ');
+  const before = currentMessage.value.slice(0, prevSpace + 1);
+  const nextSpace = currentMessage.value
+    .slice(cursorPosition.value)
+    .indexOf(' ');
+  const after = currentMessage.value.slice(
+    cursorPosition.value,
+    nextSpace >= 0 ? undefined : cursorPosition.value + nextSpace
+  );
+
+  currentMessage.value = `${before}@${selectedSuggestion.value} ${after}`;
+  nextTick(() => {
+    cursorPosition.value = unrefElement(inputRef)?.selectionStart ?? 0;
+  });
+};
+
 const handleSuggestionNavigation = (key: string) => {
   const currentIndex = suggestedMentions.value.indexOf(
     selectedSuggestion.value
@@ -63,13 +82,7 @@ const handleSuggestionNavigation = (key: string) => {
         suggestedMentions.value.at(-1);
       return;
     case KEYBOARD.ENTER:
-      currentMessage.value = currentMessage.value.replace(
-        currentWord.value,
-        '@' + selectedSuggestion.value + ' '
-      );
-      nextTick(() => {
-        cursorPosition.value = unrefElement(inputRef)?.selectionStart ?? 0;
-      });
+      insertSuggestion();
       return;
   }
 };
@@ -125,6 +138,7 @@ const isInputFocused = ref(false);
       v-model="currentMessage"
       ref="inputRef"
       flex-1
+      placeholder="Type your message here (use @ to mention someone)"
       @blur="isInputFocused = false"
       @focus="isInputFocused = true"
       @keydown="onKeydown"
