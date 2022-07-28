@@ -19,7 +19,7 @@ const onSubmit = async () => {
     <h1 m-b-3xl text-3xl text-center>Nuxt Chat App</h1>
 
     <div flex justify-center>
-      <AppSmileyFace />
+      <AppSmileyFace :size="200" />
     </div>
 
     <form flex flex-col gap-6 @submit.prevent="onSubmit">
