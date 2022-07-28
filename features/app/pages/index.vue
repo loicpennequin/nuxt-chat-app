@@ -16,7 +16,11 @@ const onSubmit = async () => {
 
 <template>
   <UiSurface m-t-20 p="10" space-y-6>
-    <h1 text-3xl text-center>Nuxt Chat App</h1>
+    <h1 m-b-3xl text-3xl text-center>Nuxt Chat App</h1>
+
+    <div flex justify-center>
+      <AppSmileyFace />
+    </div>
 
     <form flex flex-col gap-6 @submit.prevent="onSubmit">
       <UiTextInput
@@ -27,9 +31,7 @@ const onSubmit = async () => {
         placeholder="Select your username (min. 4 characters)"
       />
 
-      <UiButton color-scheme="purple" :disabled="username.length < 4">
-        Let's go !
-      </UiButton>
+      <UiButton color-scheme="purple">Let's go !</UiButton>
       <div v-if="error" color-red-700 font-bold>{{ error }}</div>
     </form>
   </UiSurface>

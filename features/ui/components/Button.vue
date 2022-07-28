@@ -4,13 +4,25 @@ const props = defineProps<{
 }>();
 
 const colorProps = computed(() => ({
-  bg: `${props.colorScheme}-500 hover:${props.colorScheme}-600 focus:${props.colorScheme}-800 disabled:purple-300`
+  from: `
+    ${props.colorScheme}-400 
+    hover:${props.colorScheme}-600 
+    focus:${props.colorScheme}-700
+    disabled:${props.colorScheme}-300
+  `,
+  to: `
+    ${props.colorScheme}-600
+    hover:${props.colorScheme}-800 
+    focus:${props.colorScheme}-900 
+    disabled:${props.colorScheme}-400
+  `
 }));
 </script>
 
 <template>
   <button
     v-bind="colorProps"
+    bg-gradient-to-r
     color-white
     duration-200
     font-bold

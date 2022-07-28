@@ -4,8 +4,12 @@ import { KEYBOARD } from '../utils/constants';
 
 const currentMessage = ref('');
 const store = useStore();
-
 const users = useChannelUsers(computed(() => store.currentChannelId));
+const inputRef = ref<HTMLInputElement>();
+const { currentWord, replaceCurrentWord } = useTextField(
+  inputRef,
+  currentMessage
+);
 
 const sendMessage = async () => {
   await $fetch('/api/message', {
@@ -20,19 +24,6 @@ const sendMessage = async () => {
   currentMessage.value = '';
 };
 
-const cursorPosition = ref(0);
-const currentWord = computed(() => {
-  const wordStart =
-    currentMessage.value.slice(0, cursorPosition.value).lastIndexOf(' ') + 1;
-  const nextSpaceIndex = currentMessage.value
-    .slice(cursorPosition.value)
-    .indexOf(' ');
-  const wordEnd =
-    nextSpaceIndex === -1 ? undefined : nextSpaceIndex + cursorPosition.value;
-
-  return currentMessage.value.slice(wordStart, wordEnd);
-});
-
 const selectedSuggestion = ref<Maybe<string>>(null);
 const suggestedMentions = computed(() => {
   if (!currentWord.value.startsWith('@')) return [];
@@ -41,81 +32,56 @@ const suggestedMentions = computed(() => {
     u.toLowerCase().includes(currentWord.value.substring(1).toLowerCase())
   );
 });
-
 watch(suggestedMentions, suggestions => {
   selectedSuggestion.value = suggestions[0] ?? null;
 });
 
-const insertSuggestion = () => {
-  const prevSpace = currentMessage.value
-    .slice(0, cursorPosition.value)
-    .lastIndexOf(' ');
-  const before = currentMessage.value.slice(0, prevSpace + 1);
-  const nextSpace = currentMessage.value
-    .slice(cursorPosition.value)
-    .indexOf(' ');
-  const after = currentMessage.value.slice(
-    cursorPosition.value,
-    nextSpace >= 0 ? undefined : cursorPosition.value + nextSpace
-  );
-
-  currentMessage.value = `${before}@${selectedSuggestion.value} ${after}`;
-  nextTick(() => {
-    cursorPosition.value = unrefElement(inputRef)?.selectionStart ?? 0;
-  });
-};
-
-const handleSuggestionNavigation = (key: string) => {
+const handleSuggestionNavigation = (event: any) => {
   const currentIndex = suggestedMentions.value.indexOf(
     selectedSuggestion.value
   );
 
-  switch (key) {
+  switch (event.key) {
     case KEYBOARD.ARROW_DOWN:
+      event.preventDefault();
       selectedSuggestion.value =
         suggestedMentions.value[currentIndex + 1] ??
         suggestedMentions.value.at(0);
       return;
+
     case KEYBOARD.ARROW_UP:
+      event.preventDefault();
       selectedSuggestion.value =
         suggestedMentions.value[currentIndex - 1] ??
         suggestedMentions.value.at(-1);
       return;
+
     case KEYBOARD.ENTER:
-      insertSuggestion();
+      event.preventDefault();
+      replaceCurrentWord(`@${selectedSuggestion.value}`);
       return;
   }
 };
 
-const inputRef = ref<HTMLInputElement>();
-const onKeyup = (event: any) => {
-  const { target, key } = event;
-
-  if (suggestedMentions.value.length) {
-    handleSuggestionNavigation(key);
-  }
-
-  if (target.selectionStart !== target.selectionEnd) return;
-  cursorPosition.value = target.selectionStart ?? 0;
-};
-
 const onKeydown = (event: any) => {
-  if (
-    suggestedMentions.value.length &&
-    [KEYBOARD.ENTER, KEYBOARD.ARROW_DOWN, KEYBOARD.ARROW_UP].includes(event.key)
-  ) {
-    console.log('should prevent default');
-    event.preventDefault();
+  if (suggestedMentions.value.length) {
+    handleSuggestionNavigation(event);
   }
 };
 
-const isInputFocused = ref(false);
+const activeElement = useActiveElement();
+const isSuggestionBoxDisplayed = computed(() => {
+  return (
+    suggestedMentions.value.length &&
+    activeElement.value === unrefElement(inputRef)
+  );
+});
 </script>
 
 <template>
   <form col-span-full flex relative @submit.prevent="sendMessage">
     <UiSurface
-      v-if="suggestedMentions.length && isInputFocused"
+      v-if="isSuggestionBoxDisplayed"
       absolute
       bottom-full
       p="0"
@@ -139,10 +105,8 @@ const isInputFocused = ref(false);
       ref="inputRef"
       flex-1
       placeholder="Type your message here (use @ to mention someone)"
-      @blur="isInputFocused = false"
-      @focus="isInputFocused = true"
+      required
       @keydown="onKeydown"
-      @keyup="onKeyup"
     />
     <UiButton
       color-scheme="purple"
