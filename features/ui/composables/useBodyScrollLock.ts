@@ -1,5 +1,4 @@
-import { MaybeRef } from '@/features/app/utils';
-import { breakpointsTailwind } from '@vueuse/core';
+import { MaybeRef } from '~~/features/app/utils';
 
 export const useBodyScrollLock = (isLocked: MaybeRef<boolean> = true) => {
   if (import.meta.env.SSR) return;

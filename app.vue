@@ -1,10 +1,16 @@
+<script setup lang="ts">
+import { StarportCarrier } from 'vue-starport';
+</script>
+
 <template>
   <Meta content="width=device-width, initial-scale=1.0" name="viewport" />
   <Title>Nuxt Chat app</Title>
 
-  <NuxtLayout>
-    <NuxtPage />
-  </NuxtLayout>
+  <StarportCarrier>
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
+  </StarportCarrier>
 </template>
 
 <style lang="scss">
@@ -22,7 +28,7 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    --at-apply: 'bg-gray-800 dark-bg-purple-300';
+    --at-apply: 'bg-gray-800 dark-bg-dark-300';
     border-radius: 10px;
   }
 }
@@ -31,21 +37,21 @@
   --at-apply: 'bg-light-300 dark:bg-dark-300 color-black dark:color-white font-sans min-h-screen';
 }
 
-.page-enter-active,
-.page-leave-active {
-  --at-apply: 'transition-all duration-300';
-}
+// .page-enter-active,
+// .page-leave-active {
+//   --at-apply: 'transition-all duration-300';
+// }
 
-.page-enter-from,
-.page-leave-to {
-  opacity: 0;
-}
+// .page-enter-from,
+// .page-leave-to {
+//   opacity: 0;
+// }
 
-.page-enter-from {
-  transform: translateY(-400px);
-}
+// .page-enter-from {
+//   transform: translateY(-400px);
+// }
 
-.page-leave-to {
-  transform: translateY(400px);
-}
+// .page-leave-to {
+//   transform: translateY(400px);
+// }
 </style>

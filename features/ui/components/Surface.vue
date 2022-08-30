@@ -7,11 +7,12 @@ const props = withDefaults(defineProps<{ is?: string }>(), {
 <template>
   <component
     :is="props.is"
-    bg="white dark:dark-100 opacity-40"
-    border="solid 2 white"
+    backdrop-blur-xl
+    bg="white opacity-40"
+    border="solid 1 light-8"
     color="inherit"
     p="6"
-    rouned
+    rounded
   >
     <slot />
   </component>

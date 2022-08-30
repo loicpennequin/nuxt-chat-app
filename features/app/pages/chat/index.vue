@@ -15,16 +15,18 @@ onUnmounted(() => {
 
 <template>
   <UiSurface class="chat-grid" grid h-full p="0">
-    <AppHeader />
-    <AppChannelList />
-    <AppChannelView />
-    <AppMessageForm />
+    <ClientOnly>
+      <AppHeader />
+      <AppChannelList />
+      <AppChannelView />
+      <AppMessageForm />
+    </ClientOnly>
   </UiSurface>
 </template>
 
 <style scoped>
 .chat-grid {
-  grid-template-rows: auto auto 1fr auto;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
   grid-auto-columns: minmax(0, 1fr);
 }
 </style>

@@ -1,16 +1,13 @@
 import { PresenceChannel } from 'pusher-js';
-import { ComputedRef } from 'vue';
 import { MaybeRef } from '../utils';
 
 export const useChannelUsers = (channelId: MaybeRef<string>) => {
-  const channel = usePusherChannel(
-    channelId
-  ) as unknown as ComputedRef<PresenceChannel>;
+  const channel = usePusherChannel<PresenceChannel>(channelId);
 
   const users = ref<any[]>(Object.keys(channel?.value.members.members || {}));
 
   const setUsers = () => {
-    users.value = Object.keys(channel.value.members.members);
+    users.value = Object.keys(channel?.value.members.members);
   };
 
   const setListeners = (channel: PresenceChannel) => {

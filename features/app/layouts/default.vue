@@ -14,7 +14,7 @@ nuxtApp.hook('page:finish', () => {
 
 <template>
   <UiBackground :class="isTransitioning && 'overflow-hidden h-screen'">
-    <UiContainer col-start-1 h-full p-y-5 row-start-1>
+    <UiContainer col-start-1 h-full p-y="0 sm:5" row-start-1>
       <slot />
     </UiContainer>
   </UiBackground>

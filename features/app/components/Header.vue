@@ -1,6 +1,7 @@
 <script setup lang="ts">
-const store = useStore();
+import { Starport } from 'vue-starport';
 
+const store = useStore();
 const { router, routes } = useTypedRouter();
 
 const onLogout = async () => {
@@ -10,12 +11,15 @@ const onLogout = async () => {
 </script>
 
 <template>
-  <header flex items-center justify-between p-3>
+  <header flex gap-3 items-center p-l-3 p-r-4 p-y-3>
+    <!-- <Starport port="smiley-face" style="height: 50px">
+      <AppSmileyFace :size="50" />
+    </Starport> -->
     <span text-xl>
       Nice to see you,
       <span font-bold>{{ store.username }}</span>
     </span>
 
-    <button i-ui-power-off p-3 title="logout" @click="onLogout" />
+    <button i-ui-power-off m-l-auto p-3 title="logout" @click="onLogout" />
   </header>
 </template>

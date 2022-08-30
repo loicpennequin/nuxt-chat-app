@@ -84,7 +84,7 @@ export const useStore = defineStore('app', {
         id: channel.id,
         name: channel.name,
         isClosable: true,
-        isDM: true,
+        isDM: channel.isDM,
         hasUnreadMessages: false,
         messages: channel.message ? [channel.message] : []
       });

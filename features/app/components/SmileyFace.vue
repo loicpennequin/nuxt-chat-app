@@ -60,7 +60,7 @@ const pupilY = computed(() => {
           :cx="-1 * size * 0.04"
           :cy="-1 * size * 0.03"
           fill="white"
-          r="5"
+          :r="size * 0.03"
         />
       </g>
     </g>
@@ -76,7 +76,7 @@ const pupilY = computed(() => {
           :cx="-1 * size * 0.04"
           :cy="-1 * size * 0.03"
           fill="white"
-          r="5"
+          :r="size * 0.03"
         />
       </g>
     </g>
@@ -93,7 +93,7 @@ const pupilY = computed(() => {
         :cx="props.size * 0.4"
         :cy="props.size * 0.85"
         fill="#fad"
-        r="40"
+        :r="size * 0.2"
       />
     </g>
   </svg>

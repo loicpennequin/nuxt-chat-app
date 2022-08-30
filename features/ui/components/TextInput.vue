@@ -8,5 +8,12 @@ const vModel = useVModel(props, 'modelValue', emit);
 </script>
 
 <template>
-  <input v-model="vModel" bg-opacity-50 bg-white outline="focus:none" p-2 />
+  <input
+    v-model="vModel"
+    bg-opacity-80
+    bg-white
+    border="solid 1 light-8"
+    outline="focus:none"
+    p-2
+  />
 </template>

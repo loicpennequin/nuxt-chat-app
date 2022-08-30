@@ -73,7 +73,7 @@ const onTokenClick = (token: MessageToken) => {
       :is="token.mention ? 'button' : 'span'"
       v-for="token in tokens"
       :key="token.text"
-      :color="token.mention ? 'purple-600' : 'inherit'"
+      color="inherit"
       :font="token.mention && 'bold'"
       @click="onTokenClick(token)"
     >

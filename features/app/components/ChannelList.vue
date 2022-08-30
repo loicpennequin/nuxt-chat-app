@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { AppChannel, NewChannel } from '../composables/useStore';
+import { PUSHER_EVENTS } from '../utils/constants';
 
 const store = useStore();
 const pusher = usePusher();
@@ -18,7 +19,12 @@ const closeChannel = (index: number) => {
 const isCurrentChannel = (channel: AppChannel) =>
   channel === store.currentChannel;
 
-userChannel?.value.bind('new-conversation', createChannel);
+onMounted(() => {
+  userChannel?.value.bind(
+    PUSHER_EVENTS.CREATED_NEW_CONVERSATION,
+    createChannel
+  );
+});
 </script>
 
 <template>
@@ -27,10 +33,9 @@ userChannel?.value.bind('new-conversation', createChannel);
       <li
         v-for="(channel, index) in store.channels"
         :key="channel.id"
-        border="solid white 1"
+        border="solid light-8 1"
         :border-b-color="isCurrentChannel(channel) && 'transparent'"
         :class="channel.hasUnreadMessages && 'animate-bounce'"
-        :color="channel.id === store.currentChannelId ? 'white' : 'white'"
         flex
         gap-2
         items-center
@@ -53,7 +58,7 @@ userChannel?.value.bind('new-conversation', createChannel);
         <div
           v-if="channel.hasMention"
           absolute
-          bg-purple-500
+          bg-red-500
           class="translate-x-1/4 -translate-y-1/4 rounded-1/2"
           h-4
           right-0
@@ -62,7 +67,7 @@ userChannel?.value.bind('new-conversation', createChannel);
           w-4
         />
       </li>
-      <li border-b="solid 1 white" grow-1></li>
+      <li border-b="solid 1 light-8" grow-1></li>
     </ul>
   </nav>
 </template>

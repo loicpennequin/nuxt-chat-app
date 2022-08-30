@@ -36,6 +36,15 @@ watch(suggestedMentions, suggestions => {
   selectedSuggestion.value = suggestions[0] ?? null;
 });
 
+const insertSuggestion = () => {
+  replaceCurrentWord(`@${selectedSuggestion.value}`);
+};
+
+const onSuggestionClick = (user: string) => {
+  selectedSuggestion.value = user;
+  insertSuggestion();
+};
+
 const handleSuggestionNavigation = (event: any) => {
   const currentIndex = suggestedMentions.value.indexOf(
     selectedSuggestion.value
@@ -58,8 +67,7 @@ const handleSuggestionNavigation = (event: any) => {
 
     case KEYBOARD.ENTER:
       event.preventDefault();
-      replaceCurrentWord(`@${selectedSuggestion.value}`);
-      return;
+      return insertSuggestion();
   }
 };
 
@@ -69,17 +77,24 @@ const onKeydown = (event: any) => {
   }
 };
 
+const formElement = ref<HTMLFormElement>();
 const activeElement = useActiveElement();
 const isSuggestionBoxDisplayed = computed(() => {
   return (
     suggestedMentions.value.length &&
-    activeElement.value === unrefElement(inputRef)
+    formElement.value?.contains(activeElement.value ?? null)
   );
 });
 </script>
 
 <template>
-  <form col-span-full flex relative @submit.prevent="sendMessage">
+  <form
+    ref="formElement"
+    col-span-full
+    flex
+    relative
+    @submit.prevent="sendMessage"
+  >
     <UiSurface
       v-if="isSuggestionBoxDisplayed"
       absolute
@@ -91,12 +106,12 @@ const isSuggestionBoxDisplayed = computed(() => {
         <li
           v-for="user in suggestedMentions"
           :key="user"
-          :bg="user === selectedSuggestion && 'purple-500'"
+          :bg="user === selectedSuggestion && 'dark-500'"
           :color="user === selectedSuggestion ? 'white' : 'inherit'"
-          p-x-2
-          p-y-1
         >
-          {{ user }}
+          <button p-x-2 p-y-1 type="button" @click="onSuggestionClick(user)">
+            {{ user }}
+          </button>
         </li>
       </ul>
     </UiSurface>
@@ -109,7 +124,7 @@ const isSuggestionBoxDisplayed = computed(() => {
       @keydown="onKeydown"
     />
     <UiButton
-      color-scheme="purple"
+      color-scheme="dark"
       :disabled="!currentMessage.length"
       rounded="0"
       title="send message"

@@ -18,3 +18,10 @@ export const KEYBOARD = {
 } as const;
 
 export const MENTIONS_REGEXP = /@[a-zA-z0-9]+/g;
+
+export const PUSHER_EVENTS = {
+  RECEIVED_NEW_MESSAGE: 'new-message',
+  USER_JOINED_CHANNEL: 'pusher:member_added',
+  USER_LEFT_CHANNEL: 'pusher:member_removed',
+  CREATED_NEW_CONVERSATION: 'new-conversation'
+};

@@ -22,7 +22,6 @@ const isTransitionDisabled = ref(false);
 watch(
   () => store.currentChannelId,
   () => {
-    console.log('?');
     isTransitionDisabled.value = true;
     setTimeout(() => {
       isTransitionDisabled.value = false;
